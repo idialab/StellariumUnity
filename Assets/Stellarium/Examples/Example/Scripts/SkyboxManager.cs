@@ -56,8 +56,8 @@ public class SkyboxManager : MonoBehaviour {
         skyboxMaterial.SetTexture("_BackTex", sides["Unity3-south.png"]);
         skyboxMaterial.SetTexture("_LeftTex", sides["Unity2-east.png"]);
         skyboxMaterial.SetTexture("_RightTex", sides["Unity4-west.png"]);
-        skyboxMaterial.SetTexture("_UpTex", sides["Unity5-top.png"]);
-        skyboxMaterial.SetTexture("_DownTex", sides["Unity6-bottom.png"]);
+        skyboxMaterial.SetTexture("_UpTex", RotateTexture(sides["Unity5-top.png"],true));
+        skyboxMaterial.SetTexture("_DownTex", RotateTexture(sides["Unity6-bottom.png"],false));
         if(OnSkyboxGenerated != null) {
             OnSkyboxGenerated(skyboxMaterial);
         }
@@ -95,6 +95,31 @@ public class SkyboxManager : MonoBehaviour {
         newTexture.Apply();
         newTexture.wrapMode = TextureWrapMode.Clamp;
         return newTexture;
+    }
+
+    Texture2D RotateTexture(Texture2D originalTexture, bool clockwise)
+    {
+        Color32[] original = originalTexture.GetPixels32();
+        Color32[] rotated = new Color32[original.Length];
+        int w = originalTexture.width;
+        int h = originalTexture.height;
+
+        int iRotated, iOriginal;
+
+        for (int j = 0; j < h; ++j)
+        {
+            for (int i = 0; i < w; ++i)
+            {
+                iRotated = (i + 1) * h - j - 1;
+                iOriginal = clockwise ? original.Length - 1 - (j * w + i) : j * w + i;
+                rotated[iRotated] = original[iOriginal];
+            }
+        }
+
+        Texture2D rotatedTexture = new Texture2D(h, w);
+        rotatedTexture.SetPixels32(rotated);
+        rotatedTexture.Apply();
+        return rotatedTexture;
     }
 
 }

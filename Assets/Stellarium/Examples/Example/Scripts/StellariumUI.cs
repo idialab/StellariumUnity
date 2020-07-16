@@ -32,7 +32,7 @@ public class StellariumUI : MonoBehaviour {
     }
 
     public void GenerateSkybox() {
-        StellariumServer.Instance.ScriptService.Run("GZ_UnitySkybox_V0152_AltAzJumps_ambient.ssc");
+        StellariumServer.Instance.ScriptService.Run("skybox.ssc");
     }
 
     public void GetStatus() {
